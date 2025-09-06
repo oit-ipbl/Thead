@@ -1,6 +1,6 @@
 # Thead
 On this page you will learn how to use theading way. Students who have already learned opencv can start from this page.
-## Tello Video
+## Theading
 The following code is for using the Tello camera. Run the code to check Telle and OpenCV.
 ### sample01.py
 ```python
