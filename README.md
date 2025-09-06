@@ -48,18 +48,13 @@ import cv2
 import time
 import threading
 
-# Telloオブジェクトを作成
 tello = Tello()
-
-# ドローンに接続
 tello.connect()
 print(f"Battery: {tello.get_battery()}%")
-# カメラを有効化
 tello.streamon()
 
 stop_event = threading.Event()
 state_event =threading.Event()
-# **リアルタイム映像を表示する関数**
 def show_camera(end):
     while True:
         frame = tello.get_frame_read().frame
@@ -99,7 +94,6 @@ def show_camera(end):
         if key == ord('q'):
             stop_event.set() 
 
-# **カメラスレッドを開始**
 camera_thread = threading.Thread(target=show_camera,args=(1,), daemon=True)
 camera_thread.start()
 
@@ -110,9 +104,7 @@ while not stop_event.is_set():
     else:
         tello.rotate_clockwise(30)
     time.sleep(1.0)
-# 着陸
 tello.land()
-# カメラ停止
 tello.streamoff()
 tello.end()
 ```
