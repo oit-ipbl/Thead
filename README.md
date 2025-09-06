@@ -39,4 +39,80 @@ tello.land()
 tello.streamoff()
 tello.end()
 ```
-### sample01.py
+## Find red
+Let's confirm that using threads allows Tello to move smoothly.
+### sample02.py
+```python
+from djitellopy import Tello
+import cv2
+import time
+import threading
+
+# Telloオブジェクトを作成
+tello = Tello()
+
+# ドローンに接続
+tello.connect()
+print(f"Battery: {tello.get_battery()}%")
+# カメラを有効化
+tello.streamon()
+
+stop_event = threading.Event()
+state_event =threading.Event()
+# **リアルタイム映像を表示する関数**
+def show_camera(end):
+    while True:
+        frame = tello.get_frame_read().frame
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        frame = cv2.resize(frame, (720, 480))
+        
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+        hsv_min = (0, 70, 70)
+        hsv_max = (15, 255, 255)
+        mask1 = cv2.inRange(hsv, hsv_min, hsv_max)
+    
+        hsv_min = (160, 70, 70)
+        hsv_max = (179, 255, 255)
+        mask2 = cv2.inRange(hsv, hsv_min, hsv_max)
+    
+        mask = mask1 + mask2
+        
+        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        
+
+        if contours:
+
+            largest_contour = max(contours, key=cv2.contourArea)
+            if cv2.contourArea(largest_contour) > 1000: 
+                x, y, w, h = cv2.boundingRect(largest_contour)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                print(cv2.contourArea(largest_contour) )
+                print(x+w/2,y+h/2)
+                print("fond color")
+                state_event.set() 
+            else:
+                print("nothing")
+                state_event.clear()
+        cv2.imshow("Tracking", frame)
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+            stop_event.set() 
+
+# **カメラスレッドを開始**
+camera_thread = threading.Thread(target=show_camera,args=(1,), daemon=True)
+camera_thread.start()
+
+tello.takeoff()
+while not stop_event.is_set():
+    if state_event.is_set():
+        tello.send_rc_control(0, 0, 0, 0)
+    else:
+        tello.rotate_clockwise(30)
+    time.sleep(1.0)
+# 着陸
+tello.land()
+# カメラ停止
+tello.streamoff()
+tello.end()
+```
