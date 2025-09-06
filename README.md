@@ -109,3 +109,5 @@ tello.land()
 tello.streamoff()
 tello.end()
 ```
+## Trouble Shooting
+When multiple error codes appear in Tello's code, they may persist in the background. In such cases, press 'ctrl'+'shift'+'Esc' to terminate the operation.
