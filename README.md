@@ -1,4 +1,5 @@
 # Thread
+Threads are an essential method for getting Tello to work properly.
 To clear the final challenge, you need to use threads. Let's learn about threads in Tello through simple examples!
 ## Video and Move
 Tello can smoothly move while sending videos by splitting threads.
