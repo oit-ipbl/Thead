@@ -1,7 +1,7 @@
 # Thread
-On this page you will learn how to use threading way. Students who have already learned opencv can start from this page.
-## Threading
-The following code is for using the Tello camera. Run the code to check Telle and OpenCV.
+To clear the final challenge, you need to use threads. Let's learn about threads in Tello through simple examples!
+## Video and Move
+Tello can smoothly move while sending videos by splitting threads.
 ### sample01.py
 ```python
 from djitellopy import Tello
@@ -39,3 +39,4 @@ tello.land()
 tello.streamoff()
 tello.end()
 ```
+### sample01.py
